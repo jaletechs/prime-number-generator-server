@@ -2,11 +2,12 @@ package com.jaletechs.png.controllers;
 
 import com.jaletechs.png.controllers.util.ApiPaths;
 import com.jaletechs.png.dtos.UserCreateRequestDto;
-import com.jaletechs.png.dtos.UserDto;
 import com.jaletechs.png.entities.security.Authority;
 import com.jaletechs.png.entities.security.User;
 import com.jaletechs.png.managers.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,7 +31,7 @@ public class UserRestController {
     private UserManager userManager;
 
     @PostMapping
-    public UserDto register(@RequestBody UserCreateRequestDto request) {
+    public ResponseEntity<?> register(@RequestBody UserCreateRequestDto request) {
 
         User user = new User();
         user.setEmail(request.getEmail());
@@ -38,6 +39,7 @@ public class UserRestController {
                 .encode(request.getPassword()));
         user.setEnabled(true);
         user.setLastPasswordResetDate(new Date());
+        user.setFullName(request.getFullName());
 
         user = userManager.saveUser(user);
 
@@ -49,6 +51,6 @@ public class UserRestController {
         authorities.add(authority);
         user.setAuthorities(authorities);
 
-        return mapToUserDto(userManager.saveUser(user));
+        return new ResponseEntity<>(mapToUserDto(userManager.saveUser(user)), HttpStatus.CREATED);
     }
 } 

@@ -1,6 +1,8 @@
 package com.jaletechs.png;
 
 import com.jaletechs.png.dtos.GenerationResponse;
+import com.jaletechs.png.dtos.UserCreateRequestDto;
+import com.jaletechs.png.dtos.UserDto;
 import com.jaletechs.png.repositories.UserGenerationLogRepository;
 import com.jaletechs.png.security.JwtAuthenticationRequest;
 import com.jaletechs.png.security.JwtTokenUtil;
@@ -88,5 +90,28 @@ public class PrimeNumberGeneratorRestControllerTest {
 
         Assertions.assertThat(status).isEqualTo(HttpStatus.OK);
         Assertions.assertThat(userGenerationLogRepository.findAll()).hasSize(1);
+    }
+
+    @Test
+    public void testCreateNewUser() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+
+        UserCreateRequestDto createRequest = new UserCreateRequestDto();
+        createRequest.setEmail("test@gmail.com");
+        createRequest.setFullName("Test Create User");
+        createRequest.setPassword("testpassword");
+
+        HttpEntity<UserCreateRequestDto> createUserRequest = new HttpEntity<>(createRequest, headers);
+        HttpStatus status = restTemplate.exchange(
+                "http://localhost:" + serverPort + "/auth/users",
+                HttpMethod.POST,createUserRequest, UserCreateRequestDto.class).getStatusCode();
+
+        ResponseEntity<UserDto> responseEntity = restTemplate.postForEntity(
+                "http://localhost:" + serverPort + "/auth/users", createUserRequest, UserDto.class);
+
+        Assertions.assertThat(status).isEqualTo(HttpStatus.CREATED);
+
+        Assertions.assertThat(responseEntity.getBody()).isNotNull();
     }
 } 
