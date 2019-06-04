@@ -36,7 +36,7 @@ public class PrimeNumberGeneratorRestController {
                                                    @RequestParam(ApiParameters.END) int end,
                                                    @RequestParam(ApiParameters.STRATEGY) int strategyOption) {
 
-        String email = jwtTokenUtil.getUsernameFromToken(authorizationHeader.substring(7));
+        String email = jwtTokenUtil.getUsernameFromToken(authorizationHeader.substring("Bearer ".length()));
         User user = userManager.getUser(email);
 
         GenerationStategyType type = GenerationStategyType.getStrategy(strategyOption);
