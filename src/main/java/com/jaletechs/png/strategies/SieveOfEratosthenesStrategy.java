@@ -33,14 +33,12 @@ public class SieveOfEratosthenesStrategy implements GenerationStrategy {
         StringBuilder builder = new StringBuilder();
 
         boolean [] primePositions = new boolean [end];
+
+        //set booleans at all positions to true to begin with
         Arrays.fill(primePositions, true);
 
-        for (int i = start; i * i < end; i++) {
-            if (i <= 1) {
-                primePositions[i] = false;
-                continue;
-            }
-
+        //the sieve requires testing and elimination to begin from the first prime number: 2
+        for (int i = 2; i * i < end; i++) {
             if (primePositions[i]) {
                 for (int j = i * i; j < end; j+=i) {
                     primePositions [j] = false;
@@ -49,6 +47,9 @@ public class SieveOfEratosthenesStrategy implements GenerationStrategy {
         }
 
         for (int i = start; i < end; i++) {
+            if (i <= 1) { // we need to escape this because we started testing from 2
+                continue;
+            }
             if (primePositions[i]) {
                 builder.append(i + ", ");
                 count++;
