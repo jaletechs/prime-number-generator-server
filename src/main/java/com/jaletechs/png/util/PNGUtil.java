@@ -52,6 +52,10 @@ public class PNGUtil {
             return false;
         }
 
+        if (number > 2 && number % 2 == 0) { //no need to test even numbers greater than 2
+            return false;
+        }
+
         for (int i = 2; i <= Math.sqrt(number); i++) {
             if (number % i == 0) {
                 return false;

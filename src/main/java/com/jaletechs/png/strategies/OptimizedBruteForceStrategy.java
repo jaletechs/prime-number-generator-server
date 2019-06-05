@@ -16,7 +16,7 @@ import java.util.concurrent.*;
  * Created by jaletechs on 2019-05-31.
  *
  * This uses Brute Force to find the prime numbers within a range of values
- * input by the user. The optimization is the use of the Executor Service
+ * input by the user. The major optimization is the use of the Executor Service
  * to take advantage of the presence of multiple cores to the do work.
  */
 public class OptimizedBruteForceStrategy implements GenerationStrategy {
